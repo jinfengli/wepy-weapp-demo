@@ -1,0 +1,253 @@
+
+<template>
+  <panel>
+    <view class="container">
+    <view class="topic-detail">
+    <view class="topic-owner">
+        <image class="owner-avatar" src="https:{{detail.member.avatar_normal}}" id="{{detail.member.id}}" bindtap="showUserInfo"></image>
+        <view class="topic-tit">{{detail.title}}</view>
+    </view>
+    <view class="topic-info">
+        <text>{{detail.member.username}}</text>
+        <text class="topic-created">{{detail.created}}</text>
+    </view>
+    <view class="topic-desc">
+        <text>{{detail.content}}</text>
+    </view>
+  </view>
+  
+  <!-- 回复评论部分 -->
+  <view class="replies">
+    <block wx:for="{{replies}}" wx:key="{{replies}}">
+        <view class="replies-item" id="{{item.id}}">
+            <view class="reply-owner">
+                <image class="reply-avatar" src="https:{{item.member.avatar_normal}}"></image>
+                <text class="reply-name">{{item.member.username}}</text>
+                <text class="reply-time">{{item.created}}</text>
+            </view>
+            <view class="reply-content">
+                {{item.content}}
+            </view>
+        </view>
+    </block>
+  </view>
+</view>
+  </panel>
+</template>
+
+<script>
+import wepy from "wepy";
+import api from "../../api/api";
+import util from "../../util/util";
+
+export default class pageDetail extends wepy.page {
+  config = {
+    navigationBarTitleText: "详情",
+    navigationBarTextStyle: "white",
+    navigationBarBackgroundColor: "#049BFF"
+  };
+
+  // 可用于页面模板中绑定的数据
+  data = {
+    detail: {},
+    // content: {}
+    // test:{}
+    replies: {}
+  };
+
+  // 声明页面中将要用到的组件
+  components = {};
+
+  onLoad(options) {
+    console.log(options.id); // 获取上一页面的 id
+    // 必须要用重新定义一个that 或者 self;
+    let self = this;
+    // self.getDetail(options.id);
+
+    wepy.request({
+      url: api.getTopicInfo({ id: options.id }),
+      // let self = this;
+      success: function(d) {
+        console.log(d.data[0]);
+        self.detail = d.data[0];
+        // 对json返回的日期进行一下处理
+        self.detail.created = util.getSmpFormatDateByLong(d.data[0].created);
+
+        // console.log(this.detail.content);
+        // self.content = d.data[0].content
+
+        // this.test = d.data[0].content
+        // console.log(this.test);
+        self.$apply(); //  准备执行脏数据检查
+      }
+    });
+    // console.log("onLoad(): " + this.detail.content);
+
+    wepy.request({
+      url: api.getDetailReplies({ topic_id: options.id }),
+      success: function(res) {
+        console.log(res);
+        res.data.forEach(function(item) {
+          item.created = util.getSmpFormatDateByLong(item.created);
+          console.log("评论日期： " + item.created);
+        });
+        // self.setData({
+        //   replies: res.data
+        // })
+        self.replies = res.data;
+        self.$apply();
+        // setTimeout(function() {
+        //   self.setData({
+        //     hidden: true
+        //   })
+        // }, 300)
+      }
+    });
+  }
+
+  methods = {
+    
+
+    // getDetailReplies: function(id) {
+    //   var that = this;
+    // wepy.request({
+    //   url: Api.getReplies({
+    //     topic_id: id
+    //   }),
+    //   success: function(res) {
+    //     console.log(res);
+    //     res.data.forEach(function(item) {
+    //       item.created = Util.formatTime(Util.transLocalTime(item.created));
+    //       console.log("评论日期： " + item.created);
+    //     })
+    //     that.setData({
+    //       replies: res.data
+    //     })
+    //     setTimeout(function() {
+    //       that.setData({
+    //         hidden: true
+    //       })
+    //     }, 300)
+    //   }
+    // })
+    // }
+  }
+
+  getDetail(id) {
+      wepy.request({
+        url: api.getTopicInfo({ id: id }),
+        // let self = this;
+        success: function(d) {
+          let self = this;
+          console.log(d.data[0]);
+          self.detail = d.data[0];
+          // 对json返回的日期进行一下处理
+          self.detail.created = util.getSmpFormatDateByLong(d.data[0].created);
+          this.detail = d.data[0]
+
+          // console.log(this.detail.content);
+          // self.content = d.data[0].content
+          // self.$apply(); // 准备执行脏数据检查
+        }
+      });
+    }
+}
+</script>
+
+<style lang="less">
+.userinfo-nickname {
+  color: #aaa;
+}
+.title {
+  color: #666666;
+}
+
+.container {
+  padding: 30rpx;
+}
+.topic-owner {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+.owner-avatar {
+  width: 128rpx;
+  height: 128rpx;
+  margin-right: 30rpx;
+  border-radius: 100%;
+}
+
+.topic-created {
+  margin-left: 30rpx;
+  font-size: 14px;
+  color: #999;
+}
+.topic-tit {
+  flex: 1;
+  box-sizing: border-box;
+  padding-right: 10rpx;
+  line-height: 1.4;
+  font-size: 14px;
+  color: #333;
+}
+
+.topic-info {
+  margin-bottom: 40rpx;
+  color: #777;
+  font-size: 14px;
+}
+
+.topic-desc {
+  font-size: 24rpx;
+  margin-bottom: 20rpx;
+  line-height: 1.4;
+  word-wrap: break-word;
+  word-break: normal;
+  font-size: 14px;
+  color: #333;
+}
+
+.replies {
+  margin-top: 30rpx;
+  border-top: 1px solid #ddd;
+}
+
+.replies-item {
+  padding: 40rpx 0;
+  border-bottom: 1px solid #eee;
+}
+
+.reply-owner {
+  display: flex;
+  align-items: center;
+  margin-bottom: 40rpx;
+}
+
+.reply-avatar {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 100%;
+  margin-right: 30rpx;
+}
+
+.reply-name,
+.reply-time,
+
+.reply-content {
+  font-size: 14px;
+  color: #666;
+}
+
+.reply-time {
+  margin-left: 30rpx;
+  color: #ccc;
+}
+
+// .reply-content {
+//   padding: 0 20rpx;
+//   line-height: 1.4;
+//   word-wrap: break-word;
+//   word-break: normal;
+//   color: #999;
+// }
+</style>

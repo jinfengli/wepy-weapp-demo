@@ -1,0 +1,173 @@
+
+<style lang="css">
+.title1 {
+  color: rgb(100, 97, 97);
+  height: 60rpx;
+  margin-right: 20rpx;
+}
+
+.icon {
+  color: purple;
+}
+
+.member-avatar {
+  width: 100rpx;
+  height: 100rpx;
+  margin-right: 20rpx;
+  border-radius: 100%;
+  background-size: cover;
+}
+
+/**index.wxss**/
+.topic-item {
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid #eee; /** 设置item的分割线 **/
+  align-items: center;
+}
+
+.member-avatar {
+  width: 128rpx;
+  height: 128rpx;
+  margin-right: 20rpx;
+  margin-left: 20rpx;
+  border-radius: 100%;
+}
+
+.topic-info {
+  flex: 1;
+  font-size: 24rpx;
+}
+
+.topic-inner {
+  display: flex;
+  align-items: center;
+  color: #777;
+}
+
+.topic-title {
+  height: 80rpx;
+  line-height: 1.4;
+  box-sizing: border-box;
+  padding-top: 5rpx;
+}
+
+.topic-left {
+  flex: 1;
+}
+
+.node-name {
+  display: inline-block;
+  max-height: 60rpx;
+  margin-right: 20rpx;
+  padding: 5rpx 10rpx;
+  margin-bottom: 30rpx;
+  margin-top: 30rpx;
+  border-radius: 5rpx;
+  background-color: #ffff00;
+}
+
+.reply-num {
+  display: inline-block;
+  margin-left: 50rpx;
+  margin-right: 30rpx;
+  padding: 10rpx;
+  height: 22rpx;
+  background-color: #ddd;
+  border-radius: 5rpx;
+  color: #777;
+}
+
+.member-nickname {
+  color: #aaa;
+}
+</style>
+
+<template>
+<!-- <navigator url="/pages/detail/detail" -->
+  <view class="item  topic-item"  style = " padding-top:20rpx; padding-bottom: 20rpx;">
+       <image class = "member-avatar" src="https:{{item.member.avatar_normal}}"></image>
+        <view class="topic-info">
+          <navigator url="../detail/detail?id={{item.id}}">
+            <view class="topic-inner">
+                <view class="topic-left">
+                    <view class="topic-title">
+                        <text>{{item.title}}</text>
+                    </view>
+                    <view>
+                      <text class="node-name">{{item.node.name}}</text>
+                      <text class="member-nickname">{{item.member.username}}</text>
+                    </view>
+                </view>
+                <view class="reply-num">{{item.replies}}</view>
+              </view>
+          </navigator>
+        </view>
+  </view>
+</template>
+
+<script>
+import wepy from "wepy";
+import util from "../util/util";
+export default class child extends wepy.component {
+  props = {
+    item: {},
+    index: {}
+  };
+
+  // beforeCreate = {
+  //   a: this.item.title
+  // }
+
+  // created = {}
+
+  data = {
+    // 异步获取数据，渲染时数据还没出来
+    // a: this.item.title
+    // item: {
+    //   title: null
+    // }
+    // console.log(this.item.title);
+    // a: "2018-02-28 12:00:19",
+    // console.log(this.item.title)
+  };
+
+  computed = {
+    getTitle: function() {
+      // let that = this;
+      // console.log(this.item.title);
+      // a = this.item.title
+      return "tetetetet".substring(0, 5);
+      // console.log(this.item.title);
+      // return this.item.title ? this.item.title.substring(0,5) + '...':'';
+
+      // var temp = this.item.title;
+      // return temp.substring(0,5);
+    }
+  };
+
+  methods = {
+    gotoDetail: function() {
+      var id = this.item.id;
+      var url = "../detail/detail?id=" + id;
+      console.log("gotoDetail url is : " + url);
+
+      wx.navigateTo({ url: url });
+    },
+
+    click(evt) {
+      // let that = this;
+      // that.item.title
+      // console.log("hello" + that.item.title);
+      console.log(this.item.title); // 需要上面使用 pros 传值
+      console.log(util.getSmpFormatDateByLong(this.item.created, true));
+      console.log(this.item.title.substring(1, 5));
+      console.log(this.item.id);
+
+      // wx.navigateTo({
+      //   url: '/pages/detail/detail',
+      // })
+    }
+  };
+}
+</script>

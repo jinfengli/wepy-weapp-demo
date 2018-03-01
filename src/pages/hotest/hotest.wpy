@@ -1,0 +1,25 @@
+<style lang="less">
+.userinfo-nickname {
+  color: #aaa;
+}
+.title {
+  color: #666;
+}
+</style>
+
+<template>
+  <panel>
+    <view class="title" >热门 Topic</view>
+  </panel>
+</template>
+
+<script>
+import wepy from "wepy";
+export default class pageHotest extends wepy.page {
+  config = {
+    navigationBarTitleText: "最热",
+    navigationBarTextStyle: "white",
+    navigationBarBackgroundColor: "#049BFF"
+  }; 
+}
+</script>

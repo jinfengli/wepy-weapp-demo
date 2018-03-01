@@ -1,0 +1,40 @@
+<style lang="less">
+.userinfo-nickname {
+  color: #aaa;
+}
+.title {
+  color: rgb(88, 10, 231);
+}
+</style>
+
+<template>
+   <panel>
+      <view class="title" >测试数据绑定</view>
+      <button @tap="request"> test </button>
+
+       <!-- 注意，使用for属性，而不是使用wx:for属性     插入script 脚本部分所声明的child组件，同时传入item-->
+   <!-- <repeat for="{{list}}" key="index" index="index" item="item">
+       <child :item="item"></child>
+    </repeat> -->
+
+    </panel>
+</template>
+
+<script>
+import wepy from "wepy";
+import Child from '../../components/child'
+
+export default class pageNode extends wepy.page {
+  
+  config = {
+    navigationBarTitleText: "节点-node",
+    navigationBarTextStyle: "white",
+    navigationBarBackgroundColor: "#049BFF"
+  };
+
+  component = {
+    child: Child,
+  }
+}
+</script>
+

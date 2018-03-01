@@ -1,0 +1,21 @@
+<style lang="less">
+.userinfo-nickname {
+  color: #aaa;
+}
+.title {
+  color: antiquewhite;
+}
+</style>
+
+<template>
+   <panel>
+      <view class="title" >测试数据</view>
+    </panel>
+</template>
+
+<script>
+import wepy from "wepy"
+export default class pageTopicList extends wepy.page {
+    
+}
+</script>

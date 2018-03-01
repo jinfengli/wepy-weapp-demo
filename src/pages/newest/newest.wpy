@@ -1,0 +1,121 @@
+<style lang="less">
+.userinfo-nickname {
+  color: #aaa;
+}
+.title {
+  color: rgb(158, 65, 11);
+}
+.page-index {
+  // some style
+}
+</style>
+
+<template>
+  <panel>
+    <!-- <view class="title" >测试数据 newest</view>  -->
+    <!-- <button @tap="request"> test </button> -->
+    <!-- <component id="list" path="list"></component> -->
+    <!--  <volList :list="vols"></volList> -->
+    <!-- <BookList :list="list" title="图书列表"></BookList> -->
+
+    <!-- 注意，使用for属性，而不是使用wx:for属性 -->
+    <repeat for="{{list}}" key="index" index="index" item="item">
+        <!-- 插入script脚本部分所声明的child组件，同时传入item -->
+      <child :item="item"></child>
+    </repeat>
+
+  </panel>
+</template>
+
+<script>
+import wepy from "wepy";
+import api from "../../api/api";
+// import util from "../../util/util"
+// import Panel from '../../components/panel' // alias example
+// import BookList from "../../components/bookList";
+
+// import VolList from "../../components/volList";
+// import list from '../../components/list'
+// import swipeDelete from 'wepy-swipe-delete'
+import Child from '../../components/child'
+// import AddressList from '../../components/addresslist'
+
+export default class pageNewest extends wepy.page {
+  config = {
+    navigationBarTitleText: "首页",
+    navigationBarTextStyle: "white",
+    navigationBarBackgroundColor: "#049BFF"
+  };
+
+  components = {
+    // list
+    // list : List,
+    // 'volList': VolList
+    // BookList
+    // swipeDelete
+    child: Child,
+    // addressList: AddressList,
+    // panel: Panel
+  };
+
+  props = {
+    // item: String
+    // util: util
+  }
+
+  data = {
+    // vols: []
+    list: [],
+
+    // list: [
+    //     {id: 1, title: '标题1'},
+    //     {id: 2, title: '标题2'}
+    //   ]
+
+    // addressList: [],
+  };
+
+  methods = {
+  }
+
+  async onLoad() {
+    // let that = this;
+    // that.request();
+
+    // await sleep(3);
+
+    //   必须要用重新定义一个that 或者 self;
+    let self = this;
+    wepy.request({
+      url: api.getLatestTopic({ p: 1 }),
+      success: function(d) {
+        // console.log(d.data[0].title + ".");
+        console.log(d.data); //  打印出来获取的信息
+        // this.list = d.data
+        self.list = d.data
+        // console.log(list);
+        // let myList = d.data;
+        // this.list = d.data;
+
+        console.log(self.list);
+        
+        // getVols(myList);
+        // let vols = this.vols
+        // vols.push()
+        // self.$emit();
+        self.$apply();
+      }
+    });
+  }
+
+
+  // sleep(time) {
+  //   return new Promise((resolve, reject) => setTimeout(() => resolve, time*1000));
+  // }
+
+  onReady() {}
+
+  request() {}
+}
+</script>
+
